@@ -104,7 +104,7 @@ export default function ResortCard({
   const isWindDangerous = weather.wind_speed_kmh > 45;
 
   return (
-    <div className="group bg-[#1C2024] border border-[#2E3A44] hover:border-[#00E5FF] rounded-lg overflow-hidden flex flex-col h-[485px] transition-all duration-300 shadow-lg">
+    <div className="group bg-[#1C2024] border border-[#2E3A44] hover:border-[#00E5FF] rounded-lg overflow-hidden flex flex-col h-[500px] sm:h-[485px] transition-all duration-300 shadow-lg">
       
       {/* 1. Header Card - Banner & Overlay */}
       <div className="relative h-36 shrink-0 overflow-hidden">
@@ -204,14 +204,14 @@ export default function ResortCard({
       </div>
 
       {/* 3. Contenedor de Contenido Variable */}
-      <div className="flex-1 p-4 overflow-hidden bg-[#1C2024] flex flex-col justify-between">
+      <div className="flex-1 p-3 sm:p-4 overflow-hidden bg-[#1C2024] flex flex-col justify-between">
         
         {/* Vista Clima / Métricas */}
         {activeTab === 'metrics' && (
           <div className="flex flex-col gap-3 h-full justify-center">
-            <div className="grid grid-cols-2 gap-3.5">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
               {/* Nieve fresca */}
-              <div className="bg-[#12161A] border border-[#2E3A44] p-3 rounded flex flex-col justify-between">
+              <div className="bg-[#12161A] border border-[#2E3A44] p-2.5 sm:p-3 rounded flex flex-col justify-between">
                 <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
                   Nieve Fresca 24h
                 </span>
@@ -224,7 +224,7 @@ export default function ResortCard({
               </div>
 
               {/* Espesores Base/Top */}
-              <div className="bg-[#12161A] border border-[#2E3A44] p-3 rounded flex flex-col justify-between">
+              <div className="bg-[#12161A] border border-[#2E3A44] p-2.5 sm:p-3 rounded flex flex-col justify-between">
                 <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
                   Espesor Acumulado
                 </span>
@@ -237,7 +237,7 @@ export default function ResortCard({
               </div>
 
               {/* Isotermia 0°C */}
-              <div className="bg-[#12161A] border border-[#2E3A44] p-3 rounded flex flex-col justify-between">
+              <div className="bg-[#12161A] border border-[#2E3A44] p-2.5 sm:p-3 rounded flex flex-col justify-between">
                 <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
                   Isotermia 0°C
                 </span>
@@ -260,7 +260,7 @@ export default function ResortCard({
               </div>
 
               {/* Viento y Dirección */}
-              <div className={`bg-[#12161A] border p-3 rounded flex flex-col justify-between transition-colors ${
+              <div className={`bg-[#12161A] border p-2.5 sm:p-3 rounded flex flex-col justify-between transition-colors ${
                 isWindDangerous ? 'border-rose-500/30 bg-rose-950/5' : 'border-[#2E3A44]'
               }`}>
                 <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
@@ -378,7 +378,7 @@ export default function ResortCard({
         )}
 
         {/* 4. Enlace al Reporte de Detalle Completo */}
-        <div className="mt-4 pt-3 border-t border-[#2E3A44]/55 flex items-center justify-between">
+        <div className="mt-3 pt-2.5 border-t border-[#2E3A44]/55 flex items-center justify-between">
           <span className="text-[9px] text-slate-500 font-mono font-medium">
             Últ. act: {weather.last_updated}
           </span>
