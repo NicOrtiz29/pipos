@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   Snowflake, Mountain, Thermometer, Wind, Navigation, 
@@ -24,6 +24,28 @@ export default function ResortCard({
   onToggleFavorite
 }: ResortCardProps) {
   const [activeTab, setActiveTab] = useState<TabType>('metrics');
+  const [localTime, setLocalTime] = useState('');
+
+  useEffect(() => {
+    if (!weather.last_updated) {
+      setLocalTime('');
+      return;
+    }
+    
+    if (weather.last_updated.includes('T') || !isNaN(Date.parse(weather.last_updated))) {
+      try {
+        const date = new Date(weather.last_updated);
+        const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const parts = date.toLocaleDateString('es-AR', { timeZoneName: 'short' }).split(' ');
+        const tzName = parts[parts.length - 1] || '';
+        setLocalTime(`${timeStr} ${tzName}`);
+      } catch (e) {
+        setLocalTime(weather.last_updated);
+      }
+    } else {
+      setLocalTime(weather.last_updated);
+    }
+  }, [weather.last_updated]);
 
   // Mapear calidad de nieve a clases de colores
   const getQualityColor = (quality: WeatherData['snow_quality']) => {
@@ -265,7 +287,7 @@ export default function ResortCard({
               <span>LIVE</span>
             </div>
             <div className="absolute bottom-2 left-2 text-[9px] text-slate-300 font-mono bg-[#101418]/60 px-1.5 py-0.5 rounded">
-              Cámara en Vivo — {weather.last_updated}
+              Cámara en Vivo — {localTime || weather.last_updated}
             </div>
             <a 
               href={resort.webcam_url} 

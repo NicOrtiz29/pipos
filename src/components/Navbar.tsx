@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bell, RotateCw } from 'lucide-react';
 import Link from 'next/link';
 
@@ -21,6 +21,33 @@ export default function Navbar({
   isRefreshing,
   lastUpdated
 }: NavbarProps) {
+  const [localTime, setLocalTime] = useState('');
+
+  useEffect(() => {
+    if (!lastUpdated) {
+      setLocalTime('');
+      return;
+    }
+    
+    // Comprobar si es un timestamp ISO válido
+    if (lastUpdated.includes('T') || !isNaN(Date.parse(lastUpdated))) {
+      try {
+        const date = new Date(lastUpdated);
+        // Formato de hora corto (ej: 16:39)
+        const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        // Obtener zona horaria del cliente en formato corto (ej: ART, CLT, GMT-3)
+        const parts = date.toLocaleDateString('es-AR', { timeZoneName: 'short' }).split(' ');
+        const tzName = parts[parts.length - 1] || '';
+        
+        setLocalTime(`${timeStr} ${tzName}`);
+      } catch (e) {
+        setLocalTime(lastUpdated);
+      }
+    } else {
+      setLocalTime(lastUpdated);
+    }
+  }, [lastUpdated]);
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#12161A]/90 frost-glass border-b border-[#2E3A44]">
       <div className="flex justify-between items-center w-full px-4 md:px-8 max-w-[1280px] mx-auto h-16">
@@ -97,7 +124,7 @@ export default function Navbar({
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00FF9D]"></span>
             </span>
             <span className="text-xs text-slate-400 font-mono">
-              Act: {lastUpdated}
+              Act: {localTime || lastUpdated}
             </span>
           </div>
 

@@ -269,7 +269,7 @@ export async function fetchWeatherForResort(resort: SkiResort): Promise<WeatherD
       snow_quality: snowQuality,
       lift_status: liftStatus,
       forecast_5days,
-      last_updated: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) + ' ART'
+      last_updated: new Date().toISOString()
     };
 
   } catch (error) {

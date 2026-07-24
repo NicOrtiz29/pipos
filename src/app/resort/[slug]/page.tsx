@@ -29,6 +29,24 @@ export default function ResortDetailPage() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [localTime, setLocalTime] = useState('');
+
+  useEffect(() => {
+    if (!weather?.last_updated) return;
+    if (weather.last_updated.includes('T') || !isNaN(Date.parse(weather.last_updated))) {
+      try {
+        const date = new Date(weather.last_updated);
+        const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const parts = date.toLocaleDateString('es-AR', { timeZoneName: 'short' }).split(' ');
+        const tzName = parts[parts.length - 1] || '';
+        setLocalTime(`${timeStr} ${tzName}`);
+      } catch (e) {
+        setLocalTime(weather.last_updated);
+      }
+    } else {
+      setLocalTime(weather.last_updated);
+    }
+  }, [weather?.last_updated]);
 
   useEffect(() => {
     const foundResort = SKI_RESORTS.find(r => r.slug === slug);
@@ -418,7 +436,7 @@ export default function ResortDetailPage() {
               />
               <div className="absolute inset-0 bg-slate-950/20" />
               <div className="absolute bottom-2 left-2 text-[9px] text-slate-300 font-mono bg-[#101418]/65 px-1.5 py-0.5 rounded">
-                Cámara en Vivo — {weather.last_updated}
+                Cámara en Vivo — {localTime || weather.last_updated}
               </div>
             </div>
 
