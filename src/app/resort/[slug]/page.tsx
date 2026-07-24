@@ -20,6 +20,15 @@ const MiniMap = dynamic(() => import('@/components/MiniMap'), {
   )
 });
 
+const ShareReport = dynamic(() => import('@/components/ShareReport'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-32 bg-[#1E252B] border border-[#2E3A44] rounded flex items-center justify-center text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+      Cargando Compartidor...
+    </div>
+  )
+});
+
 export default function ResortDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -484,6 +493,11 @@ export default function ResortDetailPage() {
               </div>
             );
           })()}
+
+          {/* Compartir Reporte a la Banda */}
+          {resort && weather && (
+            <ShareReport resort={resort} weather={weather} />
+          )}
 
           {/* Pronóstico extendido a 5 días */}
           <div className="bg-[#1E252B] border border-[#2E3A44] rounded-lg p-6 space-y-6">
