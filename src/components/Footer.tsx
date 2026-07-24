@@ -58,6 +58,16 @@ export default function Footer() {
                     Windy WebGL Layers <ExternalLink className="w-3 h-3 text-slate-500" />
                   </a>
                 </li>
+                <li>
+                  <a 
+                    href="https://www.snow-forecast.com/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-[#00E5FF] inline-flex items-center gap-1 transition-colors"
+                  >
+                    Snow-Forecast <ExternalLink className="w-3 h-3 text-slate-500" />
+                  </a>
+                </li>
               </ul>
             </div>
 

@@ -90,11 +90,11 @@ export default function InteractiveMap({
       // Determinar valor e icono según la capa activa
       let valText = '';
       if (activeLayer === 'snow') {
-        valText = `${Math.round(weather.snow_depth_top_cm)}cm`;
+        valText = `Cumbre: ${Math.round(weather.snow_depth_top_cm)}cm`;
       } else if (activeLayer === 'wind') {
-        valText = `${weather.wind_speed_kmh}km/h`;
+        valText = `Viento: ${weather.wind_speed_kmh}km/h`;
       } else {
-        valText = `${weather.temp_top_c}°C`;
+        valText = `Temp: ${weather.temp_top_c}°C`;
       }
 
       const isAr = resort.country === 'Argentina';
@@ -248,10 +248,10 @@ export default function InteractiveMap({
                           : 'bg-rose-500/10 text-rose-400'
                       }`}>
                         {activeLayer === 'snow'
-                          ? `${Math.round(weather.snow_depth_top_cm)}cm`
+                          ? `Cumbre: ${Math.round(weather.snow_depth_top_cm)}cm`
                           : activeLayer === 'wind'
-                          ? `${weather.wind_speed_kmh}km/h`
-                          : `${weather.temp_top_c}°C`}
+                          ? `Viento: ${weather.wind_speed_kmh}km/h`
+                          : `Temp: ${weather.temp_top_c}°C`}
                       </span>
                       <span className="text-[9px] text-[#00E5FF] hover:text-slate-100 font-bold block mt-1 transition-colors flex items-center justify-end gap-0.5">
                         <MapPin className="w-2.5 h-2.5" /> IR
