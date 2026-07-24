@@ -48,6 +48,46 @@ export default function ResortDetailPage() {
     }
   }, [weather?.last_updated]);
 
+  const [nextSnowfallText, setNextSnowfallText] = useState('Cargando...');
+
+  useEffect(() => {
+    if (!weather) return;
+    if (weather.is_snowing_now) {
+      setNextSnowfallText('❄️ Nevando Ahora');
+      return;
+    }
+    
+    if (!weather.next_snowfall_time) {
+      setNextSnowfallText('Sin nieve prevista (7d)');
+      return;
+    }
+
+    try {
+      const date = new Date(weather.next_snowfall_time);
+      const today = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+
+      const isToday = date.toDateString() === today.toDateString();
+      const isTomorrow = date.toDateString() === tomorrow.toDateString();
+
+      const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      if (isToday) {
+        setNextSnowfallText(`Hoy a las ${timeStr}`);
+      } else if (isTomorrow) {
+        setNextSnowfallText(`Mañana a las ${timeStr}`);
+      } else {
+        const options: Intl.DateTimeFormatOptions = { weekday: 'long', hour: '2-digit', minute: '2-digit' };
+        let formatted = date.toLocaleDateString('es-AR', options);
+        formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+        setNextSnowfallText(formatted);
+      }
+    } catch (e) {
+      setNextSnowfallText('Sin nieve prevista');
+    }
+  }, [weather?.next_snowfall_time, weather?.is_snowing_now]);
+
   useEffect(() => {
     const foundResort = SKI_RESORTS.find(r => r.slug === slug);
     if (foundResort) {
@@ -261,6 +301,22 @@ export default function ResortDetailPage() {
                 </span>
                 <span className="text-sm font-bold font-mono text-[#00E5FF] text-glow">{weather.temp_top_c} °C</span>
               </div>
+            </div>
+
+            {/* Banner de Inicio de Nevada Seamless */}
+            <div className="bg-[#12161A] border border-[#2E3A44]/75 px-4 py-3 rounded flex items-center justify-between mt-4">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00FF9D] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#00FF9D]"></span>
+                </span>
+                <span className="text-xs text-slate-300 font-bold uppercase tracking-wider">
+                  Inicio de Nevada (Modelo de Cotejo ECMWF/GFS Seamless)
+                </span>
+              </div>
+              <span className="text-xs font-black text-[#00E5FF] uppercase">
+                {nextSnowfallText}
+              </span>
             </div>
 
           </div>

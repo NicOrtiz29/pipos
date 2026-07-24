@@ -47,6 +47,45 @@ export default function ResortCard({
     }
   }, [weather.last_updated]);
 
+  const [nextSnowfallText, setNextSnowfallText] = useState('Cargando...');
+
+  useEffect(() => {
+    if (weather.is_snowing_now) {
+      setNextSnowfallText('❄️ Nevando Ahora');
+      return;
+    }
+    
+    if (!weather.next_snowfall_time) {
+      setNextSnowfallText('Sin nieve prevista (7d)');
+      return;
+    }
+
+    try {
+      const date = new Date(weather.next_snowfall_time);
+      const today = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+
+      const isToday = date.toDateString() === today.toDateString();
+      const isTomorrow = date.toDateString() === tomorrow.toDateString();
+
+      const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      if (isToday) {
+        setNextSnowfallText(`Hoy a las ${timeStr}`);
+      } else if (isTomorrow) {
+        setNextSnowfallText(`Mañana a las ${timeStr}`);
+      } else {
+        const options: Intl.DateTimeFormatOptions = { weekday: 'long', hour: '2-digit', minute: '2-digit' };
+        let formatted = date.toLocaleDateString('es-AR', options);
+        formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+        setNextSnowfallText(formatted);
+      }
+    } catch (e) {
+      setNextSnowfallText('Sin nieve prevista');
+    }
+  }, [weather.next_snowfall_time, weather.is_snowing_now]);
+
   // Mapear calidad de nieve a clases de colores
   const getQualityColor = (quality: WeatherData['snow_quality']) => {
     switch (quality) {
@@ -169,78 +208,96 @@ export default function ResortCard({
         
         {/* Vista Clima / Métricas */}
         {activeTab === 'metrics' && (
-          <div className="grid grid-cols-2 gap-4 my-auto">
-            {/* Nieve fresca */}
-            <div className="bg-[#12161A] border border-[#2E3A44] p-3 rounded flex flex-col justify-between">
-              <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
-                Nieve Fresca 24h
-              </span>
-              <span className="text-2xl font-black text-[#00FF9D] text-glow-green leading-none mt-2">
-                {weather.snowfall_24h_cm > 0 ? `+${weather.snowfall_24h_cm}` : '0'} <span className="text-xs">cm</span>
-              </span>
-              <span className="text-[9px] text-slate-500 font-semibold mt-1">
-                48h: {Math.round(weather.snowfall_48h_cm)} cm
-              </span>
-            </div>
-
-            {/* Espesores Base/Top */}
-            <div className="bg-[#12161A] border border-[#2E3A44] p-3 rounded flex flex-col justify-between">
-              <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
-                Espesor Acumulado
-              </span>
-              <span className="text-lg font-black text-slate-200 leading-none mt-2">
-                {weather.snow_depth_base_cm} / {Math.round(weather.snow_depth_top_cm)} <span className="text-xs">cm</span>
-              </span>
-              <span className="text-[9px] text-slate-500 font-semibold mt-1">
-                Base / Cumbre
-              </span>
-            </div>
-
-            {/* Isotermia 0°C */}
-            <div className="bg-[#12161A] border border-[#2E3A44] p-3 rounded flex flex-col justify-between">
-              <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
-                Isotermia 0°C
-              </span>
-              <span className="text-lg font-black text-slate-200 mt-2">
-                {weather.freezing_level_m} <span className="text-xs text-slate-400">msnm</span>
-              </span>
-              <span className={`text-[8px] font-bold mt-1 ${
-                weather.freezing_level_m > resort.elevation_top_m 
-                  ? 'text-rose-400' 
-                  : weather.freezing_level_m < resort.elevation_base_m 
-                  ? 'text-[#00FF9D]' 
-                  : 'text-amber-400'
-              }`}>
-                {weather.freezing_level_m > resort.elevation_top_m 
-                  ? '⚠️ Lluvia en Cumbre' 
-                  : weather.freezing_level_m < resort.elevation_base_m 
-                  ? '❄️ Nieve en Base' 
-                  : '🏔️ Lluvia en Base / Nieve arriba'}
-              </span>
-            </div>
-
-            {/* Viento y Dirección */}
-            <div className={`bg-[#12161A] border p-3 rounded flex flex-col justify-between transition-colors ${
-              isWindDangerous ? 'border-rose-500/30 bg-rose-950/5' : 'border-[#2E3A44]'
-            }`}>
-              <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
-                Viento en Altura
-              </span>
-              <div className="flex items-center gap-2 mt-2">
-                <Navigation 
-                  className={`w-4 h-4 shrink-0 transition-transform ${
-                    isWindDangerous ? 'text-rose-400' : 'text-[#00E5FF]'
-                  }`} 
-                  style={{ transform: `rotate(${weather.wind_direction_deg}deg)` }}
-                />
-                <span className="text-base font-black text-slate-200">
-                  {weather.wind_speed_kmh} <span className="text-[10px] font-medium text-slate-400">km/h</span>
+          <div className="flex flex-col gap-3 h-full justify-center">
+            <div className="grid grid-cols-2 gap-3.5">
+              {/* Nieve fresca */}
+              <div className="bg-[#12161A] border border-[#2E3A44] p-3 rounded flex flex-col justify-between">
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
+                  Nieve Fresca 24h
+                </span>
+                <span className="text-2xl font-black text-[#00FF9D] text-glow-green leading-none mt-2">
+                  {weather.snowfall_24h_cm > 0 ? `+${weather.snowfall_24h_cm}` : '0'} <span className="text-xs">cm</span>
+                </span>
+                <span className="text-[9px] text-slate-500 font-semibold mt-1">
+                  48h: {Math.round(weather.snowfall_48h_cm)} cm
                 </span>
               </div>
-              <span className={`text-[8px] font-bold mt-1 ${
-                isWindDangerous ? 'text-rose-400' : 'text-slate-500'
+
+              {/* Espesores Base/Top */}
+              <div className="bg-[#12161A] border border-[#2E3A44] p-3 rounded flex flex-col justify-between">
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
+                  Espesor Acumulado
+                </span>
+                <span className="text-lg font-black text-slate-200 leading-none mt-2">
+                  {weather.snow_depth_base_cm} / {Math.round(weather.snow_depth_top_cm)} <span className="text-xs">cm</span>
+                </span>
+                <span className="text-[9px] text-slate-500 font-semibold mt-1">
+                  Base / Cumbre
+                </span>
+              </div>
+
+              {/* Isotermia 0°C */}
+              <div className="bg-[#12161A] border border-[#2E3A44] p-3 rounded flex flex-col justify-between">
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
+                  Isotermia 0°C
+                </span>
+                <span className="text-lg font-black text-slate-200 mt-2">
+                  {weather.freezing_level_m} <span className="text-xs text-slate-400">msnm</span>
+                </span>
+                <span className={`text-[8px] font-bold mt-1 ${
+                  weather.freezing_level_m > resort.elevation_top_m 
+                    ? 'text-rose-400' 
+                    : weather.freezing_level_m < resort.elevation_base_m 
+                    ? 'text-[#00FF9D]' 
+                    : 'text-amber-400'
+                }`}>
+                  {weather.freezing_level_m > resort.elevation_top_m 
+                    ? '⚠️ Lluvia en Cumbre' 
+                    : weather.freezing_level_m < resort.elevation_base_m 
+                    ? '❄️ Nieve en Base' 
+                    : '🏔️ Lluvia en Base / Nieve arriba'}
+                </span>
+              </div>
+
+              {/* Viento y Dirección */}
+              <div className={`bg-[#12161A] border p-3 rounded flex flex-col justify-between transition-colors ${
+                isWindDangerous ? 'border-rose-500/30 bg-rose-950/5' : 'border-[#2E3A44]'
               }`}>
-                Dirección: {getWindDirectionLabel(weather.wind_direction_deg)} {isWindDangerous ? '(Rachas fuertes)' : ''}
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
+                  Viento en Altura
+                </span>
+                <div className="flex items-center gap-2 mt-2">
+                  <Navigation 
+                    className={`w-4 h-4 shrink-0 transition-transform ${
+                      isWindDangerous ? 'text-rose-400' : 'text-[#00E5FF]'
+                    }`} 
+                    style={{ transform: `rotate(${weather.wind_direction_deg}deg)` }}
+                  />
+                  <span className="text-base font-black text-slate-200">
+                    {weather.wind_speed_kmh} <span className="text-[10px] font-medium text-slate-400">km/h</span>
+                  </span>
+                </div>
+                <span className={`text-[8px] font-bold mt-1 ${
+                  isWindDangerous ? 'text-rose-400' : 'text-slate-500'
+                }`}>
+                  Dirección: {getWindDirectionLabel(weather.wind_direction_deg)} {isWindDangerous ? '(Rachas fuertes)' : ''}
+                </span>
+              </div>
+            </div>
+
+            {/* Banner de Inicio de Nevada Seamless */}
+            <div className="bg-[#12161A] border border-[#2E3A44]/75 px-3 py-2 rounded flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00FF9D] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#00FF9D]"></span>
+                </span>
+                <span className="text-[9px] text-slate-400 font-black uppercase tracking-wider">
+                  Inicio Nevada (ECMWF/GFS)
+                </span>
+              </div>
+              <span className="text-[10px] font-black text-[#00E5FF] uppercase">
+                {nextSnowfallText}
               </span>
             </div>
           </div>

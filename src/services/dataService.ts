@@ -34,6 +34,8 @@ export interface WeatherData {
     weather_code: number;
   }[];
   last_updated: string;
+  next_snowfall_time: string | null;
+  is_snowing_now: boolean;
 }
 
 export const SKI_RESORTS: SkiResort[] = [
@@ -256,6 +258,35 @@ export async function fetchWeatherForResort(resort: SkiResort): Promise<WeatherD
       });
     }
 
+    // Encontrar cuándo empieza a nevar (primer registro a partir de ahora con snowfall > 0.1)
+    let nextSnowfallTime: string | null = null;
+    let isSnowingNow = false;
+    const now = new Date();
+    
+    if (hourly.time && hourly.snowfall) {
+      let currentIdx = 0;
+      let minDiff = Infinity;
+      for (let i = 0; i < hourly.time.length; i++) {
+        const diff = Math.abs(new Date(hourly.time[i]).getTime() - now.getTime());
+        if (diff < minDiff) {
+          minDiff = diff;
+          currentIdx = i;
+        }
+      }
+
+      if (hourly.snowfall[currentIdx] > 0.1) {
+        isSnowingNow = true;
+        nextSnowfallTime = hourly.time[currentIdx];
+      } else {
+        for (let i = currentIdx + 1; i < hourly.time.length; i++) {
+          if (hourly.snowfall[i] > 0.1) {
+            nextSnowfallTime = hourly.time[i];
+            break;
+          }
+        }
+      }
+    }
+
     return {
       snowfall_24h_cm: currentSnowfall24h,
       snowfall_48h_cm: currentSnowfall48h,
@@ -269,7 +300,9 @@ export async function fetchWeatherForResort(resort: SkiResort): Promise<WeatherD
       snow_quality: snowQuality,
       lift_status: liftStatus,
       forecast_5days,
-      last_updated: new Date().toISOString()
+      last_updated: new Date().toISOString(),
+      next_snowfall_time: nextSnowfallTime,
+      is_snowing_now: isSnowingNow
     };
 
   } catch (error) {
@@ -301,7 +334,9 @@ function getFallbackWeatherData(resort: SkiResort): WeatherData {
       { date: 'Día 4', snowfall_sum_cm: 0, temp_max: 4, temp_min: -4, weather_code: 0 },
       { date: 'Día 5', snowfall_sum_cm: 5, temp_max: 2, temp_min: -6, weather_code: 71 }
     ],
-    last_updated: 'Fallback (Sin Conexión)'
+    last_updated: 'Fallback (Sin Conexión)',
+    next_snowfall_time: null,
+    is_snowing_now: false
   };
 }
 
