@@ -8,6 +8,7 @@ import {
   MapPin, Eye, Calendar, AlertTriangle, ShieldCheck, Heart, Navigation
 } from 'lucide-react';
 import { SKI_RESORTS, SkiResort, WeatherData, getWeatherIcon, getWindDirectionLabel } from '@/services/dataService';
+import Footer from '@/components/Footer';
 
 export default function ResortDetailPage() {
   const params = useParams();
@@ -416,6 +417,9 @@ export default function ResortDetailPage() {
         </div>
 
       </section>
+
+      {/* Footer de Fuentes */}
+      <Footer />
 
     </main>
   );

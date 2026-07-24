@@ -7,6 +7,7 @@ import HeroRanking from '@/components/HeroRanking';
 import ResortCard from '@/components/ResortCard';
 import WindyMap from '@/components/WindyMap';
 import PushModal from '@/components/PushModal';
+import Footer from '@/components/Footer';
 import { SKI_RESORTS, SkiResort, WeatherData } from '@/services/dataService';
 
 export default function Home() {
@@ -303,6 +304,9 @@ export default function Home() {
         isOpen={isAlertsOpen}
         onClose={() => setIsAlertsOpen(false)}
       />
+
+      {/* Footer de Fuentes */}
+      <Footer />
 
     </main>
   );
