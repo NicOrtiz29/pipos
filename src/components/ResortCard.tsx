@@ -104,7 +104,7 @@ export default function ResortCard({
   const isWindDangerous = weather.wind_speed_kmh > 45;
 
   return (
-    <div className="group bg-[#1C2024] border border-[#2E3A44] hover:border-[#00E5FF] rounded-lg overflow-hidden flex flex-col h-[460px] transition-all duration-300 shadow-lg">
+    <div className="group bg-[#1C2024] border border-[#2E3A44] hover:border-[#00E5FF] rounded-lg overflow-hidden flex flex-col h-[485px] transition-all duration-300 shadow-lg">
       
       {/* 1. Header Card - Banner & Overlay */}
       <div className="relative h-36 shrink-0 overflow-hidden">
@@ -204,7 +204,7 @@ export default function ResortCard({
       </div>
 
       {/* 3. Contenedor de Contenido Variable */}
-      <div className="flex-1 p-4 overflow-y-auto bg-[#1C2024] flex flex-col justify-between">
+      <div className="flex-1 p-4 overflow-hidden bg-[#1C2024] flex flex-col justify-between">
         
         {/* Vista Clima / Métricas */}
         {activeTab === 'metrics' && (

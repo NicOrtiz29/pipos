@@ -404,6 +404,87 @@ export default function ResortDetailPage() {
 
           </div>
 
+          {/* Pronóstico por Altura (Estilo Snow-Forecast) */}
+          {resort && weather && (() => {
+            const elevMid = Math.round((resort.elevation_base_m + resort.elevation_top_m) / 2);
+            
+            // Cálculos térmicos y de viento por altura
+            const tempMid = parseFloat((weather.temp_base_c - 0.0065 * (elevMid - resort.elevation_base_m)).toFixed(1));
+            const windMid = parseFloat((weather.wind_speed_kmh * 0.7).toFixed(1));
+            const windBase = parseFloat((weather.wind_speed_kmh * 0.4).toFixed(1));
+            
+            const snowTop = weather.freezing_level_m > resort.elevation_top_m ? 0 : weather.snowfall_24h_cm;
+            const snowMid = weather.freezing_level_m > elevMid ? 0 : weather.snowfall_24h_cm;
+            const snowBase = weather.freezing_level_m > resort.elevation_base_m ? 0 : weather.snowfall_24h_cm;
+
+            return (
+              <div className="bg-[#1E252B] border border-[#2E3A44] rounded-lg p-6 space-y-6">
+                <h3 className="text-sm font-black text-slate-200 uppercase tracking-wider border-b border-[#2E3A44] pb-2 flex items-center justify-between">
+                  <span>📊 Pronóstico por Altitud (Estilo Snow-Forecast)</span>
+                  <span className="text-[9px] bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/20 px-2 py-0.5 rounded font-black tracking-widest">SEAMLESS</span>
+                </h3>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs text-slate-300 font-semibold border-collapse">
+                    <thead>
+                      <tr className="border-b border-[#2E3A44] text-[10px] text-slate-400 font-black uppercase tracking-wider">
+                        <th className="py-2.5">Nivel</th>
+                        <th className="py-2.5">Altitud</th>
+                        <th className="py-2.5">Temp.</th>
+                        <th className="py-2.5">Viento</th>
+                        <th className="py-2.5">Nieve 24h</th>
+                        <th className="py-2.5">Tipo Precipitación</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#2E3A44]/40 font-mono">
+                      
+                      {/* CUMBRE */}
+                      <tr className="hover:bg-[#12161A]/30 transition-colors">
+                        <td className="py-3 font-sans font-black text-slate-200">🏔️ Cumbre</td>
+                        <td className="py-3">{resort.elevation_top_m} msnm</td>
+                        <td className="py-3 text-[#00E5FF] font-bold">{weather.temp_top_c} °C</td>
+                        <td className="py-3">{weather.wind_speed_kmh} km/h</td>
+                        <td className="py-3 text-[#00FF9D] font-bold">{snowTop > 0 ? `+${Math.round(snowTop)} cm` : '0 cm'}</td>
+                        <td className="py-3 font-sans">
+                          {weather.freezing_level_m > resort.elevation_top_m ? '🌧️ Lluvia' : '❄️ Nieve Seca'}
+                        </td>
+                      </tr>
+
+                      {/* MEDIO */}
+                      <tr className="hover:bg-[#12161A]/30 transition-colors">
+                        <td className="py-3 font-sans font-black text-slate-200">⛰️ Medio</td>
+                        <td className="py-3">{elevMid} msnm</td>
+                        <td className="py-3 text-slate-200 font-bold">{tempMid} °C</td>
+                        <td className="py-3">{windMid} km/h</td>
+                        <td className="py-3 text-slate-200 font-bold">{snowMid > 0 ? `+${Math.round(snowMid)} cm` : '0 cm'}</td>
+                        <td className="py-3 font-sans">
+                          {weather.freezing_level_m > elevMid ? '🌧️ Lluvia' : '❄️ Nieve Húmeda'}
+                        </td>
+                      </tr>
+
+                      {/* BASE */}
+                      <tr className="hover:bg-[#12161A]/30 transition-colors">
+                        <td className="py-3 font-sans font-black text-slate-200">🏡 Base</td>
+                        <td className="py-3">{resort.elevation_base_m} msnm</td>
+                        <td className="py-3 text-slate-400">{weather.temp_base_c} °C</td>
+                        <td className="py-3">{windBase} km/h</td>
+                        <td className="py-3 text-slate-400">{snowBase > 0 ? `+${Math.round(snowBase)} cm` : '0 cm'}</td>
+                        <td className="py-3 font-sans">
+                          {weather.freezing_level_m > resort.elevation_base_m ? '🌧️ Lluvia' : '❄️ Nieve Húmeda'}
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+
+                <p className="text-[10px] text-slate-500 font-medium italic leading-relaxed">
+                  * Nota: El viento en base y medio-montaña está estimado mediante reducción por rugosidad de ladera y abrigo topográfico respecto al viento libre a 700 hPa (~3000m). Las temperaturas se calculan con el gradiente térmico adiabático estándar de -0.65°C cada 100m.
+                </p>
+              </div>
+            );
+          })()}
+
           {/* Pronóstico extendido a 5 días */}
           <div className="bg-[#1E252B] border border-[#2E3A44] rounded-lg p-6 space-y-6">
             <h3 className="text-sm font-black text-slate-200 uppercase tracking-wider border-b border-[#2E3A44] pb-2">
