@@ -1,13 +1,24 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Search, SlidersHorizontal, Snowflake, Star, RefreshCw } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import HeroRanking from '@/components/HeroRanking';
 import ResortCard from '@/components/ResortCard';
-import WindyMap from '@/components/WindyMap';
 import PushModal from '@/components/PushModal';
 import Footer from '@/components/Footer';
+
+const InteractiveMap = dynamic(() => import('@/components/InteractiveMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[550px] w-full bg-[#1E252B] border border-[#2E3A44] rounded-lg text-slate-400 flex flex-col justify-center items-center gap-4">
+      <div className="w-8 h-8 border-4 border-[#00E5FF] border-t-transparent rounded-full animate-spin"></div>
+      <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">Cargando Mapa...</p>
+    </div>
+  )
+});
 import { SKI_RESORTS, SkiResort, WeatherData } from '@/services/dataService';
 
 export default function Home() {
@@ -283,7 +294,7 @@ export default function Home() {
 
             {/* 4. Mapa Meteorológico Interactivo */}
             <section className="space-y-4">
-              <div className="border-b border-[#2E3A44]/60 pb-2">
+              <div className="border-b border-[#2E3A44]/60 pb-2 flex items-center justify-between">
                 <h3 className="text-xs font-black uppercase text-slate-200 tracking-wider flex items-center gap-2">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00E5FF] opacity-75"></span>
@@ -291,8 +302,18 @@ export default function Home() {
                   </span>
                   Mapa en Vivo de la Cordillera
                 </h3>
+                <Link 
+                  href="/mapa"
+                  className="text-[10px] text-[#00E5FF] font-black uppercase tracking-wider hover:text-slate-100 transition-colors"
+                >
+                  Ver Pantalla Completa &rarr;
+                </Link>
               </div>
-              <WindyMap />
+              <InteractiveMap 
+                selectedCountry={selectedCountry}
+                setSelectedCountry={setSelectedCountry}
+                heightClass="h-[550px]"
+              />
             </section>
           </>
         )}

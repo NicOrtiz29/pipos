@@ -65,3 +65,54 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #00E5FF;
 }
+
+/* Custom map labels matching Stitch design */
+.custom-map-tooltip-ar {
+  background-color: rgba(18, 22, 26, 0.9) !important;
+  border: 1px solid rgba(0, 229, 255, 0.4) !important;
+  color: #00E5FF !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  font-family: Arial, sans-serif !important;
+  border-radius: 3px !important;
+  padding: 3px 6px !important;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.2) !important;
+}
+
+.custom-map-tooltip-cl {
+  background-color: rgba(18, 22, 26, 0.9) !important;
+  border: 1px solid rgba(0, 255, 157, 0.4) !important;
+  color: #00FF9D !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  font-family: Arial, sans-serif !important;
+  border-radius: 3px !important;
+  padding: 3px 6px !important;
+  box-shadow: 0 0 10px rgba(0, 255, 157, 0.2) !important;
+}
+
+.leaflet-tooltip-top::before {
+  border-top-color: transparent !important;
+}
+.leaflet-tooltip-bottom::before {
+  border-bottom-color: transparent !important;
+}
+
+/* Leaflet container dark correction */
+.leaflet-container {
+  background: #101418 !important;
+}
+.leaflet-bar {
+  border: 1px solid #2E3A44 !important;
+  box-shadow: none !important;
+}
+.leaflet-bar a {
+  background-color: #1E252B !important;
+  color: #F1F5F9 !important;
+  border-bottom: 1px solid #2E3A44 !important;
+}
+.leaflet-bar a:hover {
+  background-color: #2E3A44 !important;
+  color: #00E5FF !important;
+}
+

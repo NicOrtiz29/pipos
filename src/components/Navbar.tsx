@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Bell, RotateCw, Snowflake } from 'lucide-react';
+import { Bell, RotateCw } from 'lucide-react';
+import Link from 'next/link';
 
 interface NavbarProps {
   selectedCountry: 'Argentina' | 'Chile' | 'ALL';
@@ -24,23 +25,34 @@ export default function Navbar({
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#12161A]/90 frost-glass border-b border-[#2E3A44]">
       <div className="flex justify-between items-center w-full px-4 md:px-8 max-w-[1280px] mx-auto h-16">
         
-        {/* Izquierda: Logo */}
+        {/* Izquierda: Logo y Navegación */}
         <div className="flex items-center gap-3">
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-full overflow-hidden border border-[#2E3A44] shadow-[0_0_15px_rgba(0,229,255,0.25)]">
-            <img 
-              src="/logo.png" 
-              alt="PIPOS RIDERS Logo" 
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-sans text-lg font-extrabold tracking-wider text-slate-100 text-glow">
-              PIPOS RIDERS
-            </span>
-            <span className="text-[10px] text-slate-400 font-medium tracking-widest uppercase">
-              Snow Tracker
-            </span>
-          </div>
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative flex items-center justify-center w-10 h-10 rounded-full overflow-hidden border border-[#2E3A44] group-hover:border-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.25)] transition-colors">
+              <img 
+                src="/logo.png" 
+                alt="PIPOS RIDERS Logo" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-sans text-lg font-extrabold tracking-wider text-slate-100 group-hover:text-[#00E5FF] transition-colors text-glow">
+                PIPOS RIDERS
+              </span>
+              <span className="text-[10px] text-slate-400 font-medium tracking-widest uppercase">
+                Snow Tracker
+              </span>
+            </div>
+          </Link>
+          
+          <nav className="hidden md:flex gap-4 ml-6 pl-6 border-l border-[#2E3A44]/60">
+            <Link href="/" className="text-[10px] font-black uppercase tracking-wider text-slate-400 hover:text-[#00E5FF] transition-colors">
+              Dashboard
+            </Link>
+            <Link href="/mapa" className="text-[10px] font-black uppercase tracking-wider text-slate-400 hover:text-[#00E5FF] transition-colors">
+              Mapa
+            </Link>
+          </nav>
         </div>
 
         {/* Centro: Toggles de País */}
