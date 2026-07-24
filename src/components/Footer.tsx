@@ -10,9 +10,16 @@ export default function Footer() {
         
         {/* Info del Sitio */}
         <div className="space-y-4">
-          <div className="flex items-center gap-2 text-slate-100">
+          <div className="flex items-center gap-2.5 text-slate-100">
+            <div className="w-6 h-6 rounded-full overflow-hidden border border-[#2E3A44] shadow-[0_0_10px_rgba(0,229,255,0.15)] shrink-0">
+              <img 
+                src="/logo.png" 
+                alt="PIPOS RIDERS Logo" 
+                className="w-full h-full object-cover"
+              />
+            </div>
             <span className="font-extrabold text-sm tracking-wider uppercase">
-              🏔️ PIPOS RIDERS
+              PIPOS RIDERS
             </span>
             <span className="text-[10px] bg-[#00FF9D]/15 text-[#00FF9D] border border-[#00FF9D]/30 px-2 py-0.5 rounded font-black tracking-wider uppercase">
               Datos Científicos
