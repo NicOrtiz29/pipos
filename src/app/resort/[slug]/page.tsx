@@ -9,6 +9,16 @@ import {
 } from 'lucide-react';
 import { SKI_RESORTS, SkiResort, WeatherData, getWeatherIcon, getWindDirectionLabel } from '@/services/dataService';
 import Footer from '@/components/Footer';
+import dynamic from 'next/dynamic';
+
+const MiniMap = dynamic(() => import('@/components/MiniMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[220px] bg-[#12161A] border border-[#2E3A44] rounded flex items-center justify-center text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+      Cargando Mapa...
+    </div>
+  )
+});
 
 export default function ResortDetailPage() {
   const params = useParams();
@@ -374,6 +384,14 @@ export default function ResortDetailPage() {
                 <p>• Los pasos fronterizos cierran por nevadas extremas o congelamiento.</p>
               </div>
             </div>
+          </div>
+
+          {/* Mapa de Ubicación & Clima en Vivo */}
+          <div className="bg-[#1E252B] border border-[#2E3A44] rounded-lg p-6 space-y-4">
+            <h3 className="text-sm font-black text-slate-200 uppercase tracking-wider border-b border-[#2E3A44] pb-2">
+              🗺️ Mapa de Ubicación & Clima
+            </h3>
+            <MiniMap resort={resort} weather={weather} />
           </div>
 
           {/* Webcam Live */}
