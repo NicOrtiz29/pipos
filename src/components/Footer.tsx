@@ -28,8 +28,17 @@ export default function Footer() {
           <p className="text-xs text-slate-400 leading-relaxed max-w-md font-medium">
             Seguimiento meteorológico de montaña de alta resolución y estado de acumulación de nieve en la cordillera de los Andes de Argentina y Chile. Diseñado para riders y deportistas de invierno.
           </p>
-          <div className="text-[10px] text-slate-500 font-medium">
-            © 2026 PIPOS RIDERS. Chasing the perfect powder.
+          <div className="text-[10px] text-slate-500 font-medium flex items-center gap-4 flex-wrap">
+            <span>© 2026 PIPOS RIDERS. Chasing the perfect powder.</span>
+            <button 
+              onClick={() => {
+                throw new Error("Sentry Test Error from Pipos Riders!");
+              }}
+              className="text-[9px] text-slate-600 hover:text-rose-500 transition-colors font-mono cursor-pointer"
+              title="Lanza un error de prueba a Sentry"
+            >
+              [Test Sentry]
+            </button>
           </div>
         </div>
 
