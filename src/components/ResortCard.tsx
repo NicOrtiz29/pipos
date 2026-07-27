@@ -327,30 +327,37 @@ export default function ResortCard({
         {/* Vista Webcam */}
         {activeTab === 'webcam' && (
           <div className="relative flex-1 rounded overflow-hidden border border-[#2E3A44] bg-[#12161A] flex flex-col justify-center items-center group/webcam h-full w-full">
-            <img 
-              src={resort.webcam_url} 
-              onError={(e) => {
-                // Fallback a la imagen del cerro de la base de datos si hay CORS o error de conexión
-                e.currentTarget.src = resort.image_url;
-                e.currentTarget.style.opacity = "0.6";
-                e.currentTarget.style.filter = "blur(0.5px)";
-              }}
-              alt="Live Mountain Webcam" 
-              className="w-full h-full object-cover" 
-            />
-            <div className="absolute inset-0 bg-slate-950/20" />
-            <div className="absolute top-2 left-2 bg-rose-600 text-white font-mono font-bold text-[8px] px-1.5 py-0.5 rounded flex items-center gap-1">
+            <a 
+              href={resort.webcam_url} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-full h-full block relative cursor-pointer"
+            >
+              <img 
+                src={resort.webcam_url} 
+                onError={(e) => {
+                  // Fallback a la imagen del cerro de la base de datos si hay CORS o error de conexión
+                  e.currentTarget.src = resort.image_url;
+                  e.currentTarget.style.opacity = "0.6";
+                  e.currentTarget.style.filter = "blur(0.5px)";
+                }}
+                alt="Live Mountain Webcam" 
+                className="w-full h-full object-cover" 
+              />
+              <div className="absolute inset-0 bg-slate-950/20" />
+            </a>
+            <div className="absolute top-2 left-2 bg-rose-600 text-white font-mono font-bold text-[8px] px-1.5 py-0.5 rounded flex items-center gap-1 pointer-events-none">
               <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping"></span>
               <span>LIVE</span>
             </div>
-            <div className="absolute bottom-2 left-2 text-[9px] text-slate-300 font-mono bg-[#101418]/60 px-1.5 py-0.5 rounded">
+            <div className="absolute bottom-2 left-2 text-[9px] text-slate-300 font-mono bg-[#101418]/60 px-1.5 py-0.5 rounded pointer-events-none">
               Cámara en Vivo — {localTime || weather.last_updated}
             </div>
             <a 
               href={resort.webcam_url} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="absolute bg-[#1C2024]/90 hover:bg-[#00E5FF] hover:text-[#101418] border border-[#2E3A44] text-slate-100 text-[10px] font-black uppercase px-3 py-1.5 rounded tracking-wider transition-all duration-300 scale-95 group-hover/webcam:scale-100 shadow-md opacity-0 group-hover/webcam:opacity-100"
+              className="absolute bg-[#1C2024]/90 hover:bg-[#00E5FF] hover:text-[#101418] border border-[#2E3A44] text-slate-100 text-[10px] font-black uppercase px-3 py-1.5 rounded tracking-wider transition-all duration-300 shadow-md z-10 opacity-100 scale-100 md:opacity-0 md:scale-95 md:group-hover/webcam:opacity-100 md:group-hover/webcam:scale-100 cursor-pointer"
             >
               Ver Enlace Oficial
             </a>
