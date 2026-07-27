@@ -357,9 +357,10 @@ export default function ResortCard({
               href={resort.webcam_url} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="absolute bg-[#1C2024]/90 hover:bg-[#00E5FF] hover:text-[#101418] border border-[#2E3A44] text-slate-100 text-[10px] font-black uppercase px-3 py-1.5 rounded tracking-wider transition-all duration-300 shadow-md z-10 opacity-100 scale-100 md:opacity-0 md:scale-95 md:group-hover/webcam:opacity-100 md:group-hover/webcam:scale-100 cursor-pointer"
+              className="absolute bottom-2 right-2 bg-[#00E5FF] hover:bg-[#00E5FF]/85 text-[#101418] text-[9px] font-black uppercase px-2.5 py-1 rounded transition-all duration-200 shadow-md flex items-center gap-1 active:scale-95 cursor-pointer"
             >
-              Ver Enlace Oficial
+              <span>Ver en vivo</span>
+              <ChevronRight className="w-3 h-3" />
             </a>
           </div>
         )}
