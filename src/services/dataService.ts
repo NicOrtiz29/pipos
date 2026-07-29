@@ -208,11 +208,21 @@ export async function fetchWeatherForResort(resort: SkiResort): Promise<WeatherD
     const currentSnowfall48h = currentSnowfall24h + ((daily.snowfall_sum && daily.snowfall_sum[1]) || 0);
 
     // Espesor de nieve en superficie
-    // La API reporta profundidad en metros, convertimos a cm
+    // La API de Open-Meteo estima el espesor de nieve (snow_depth) en una cota media-alta (cumbre) debido a la altitud de la grilla.
+    // Tratamos rawDepth como espesor estimado en cumbre (top).
     const rawDepth = (hourly.snow_depth && hourly.snow_depth[0]) || 0;
-    const baseDepthCm = Math.round(rawDepth * 100) || 15; // backup default si no hay nieve detectada
-    // Asumimos que en cumbre hay típicamente el doble o triple de espesor de nieve que en la base en los Andes
-    const topDepthCm = baseDepthCm * 2.5 + (currentSnowfall24h * 1.5);
+    const topDepthCm = Math.round(rawDepth * 100) || 45; // backup default en cumbre si no hay nieve detectada
+
+    // El espesor en la base depende de la altitud de la base. Centros más altos (como Valle Nevado o Portillo) retienen más nieve en la base.
+    // Calculamos un factor de base dinámico entre 0.2 (bases bajas ~1000m) y 0.45 (bases altas ~3000m).
+    const elevationBase = resort.elevation_base_m;
+    let baseRatio = 0.2; // Default para bases muy bajas
+    if (elevationBase > 1000) {
+      // Escalar linealmente entre 1000m (ratio 0.2) y 3000m (ratio 0.45)
+      baseRatio = 0.2 + Math.min(0.25, ((elevationBase - 1000) / 2000) * 0.25);
+    }
+
+    const baseDepthCm = Math.max(15, Math.round(topDepthCm * baseRatio));
 
     // Altura de la isotermia 0°C
     const freezingLevel = Math.round((hourly.freezing_level_height && hourly.freezing_level_height[0]) || 0);
